@@ -63,4 +63,8 @@ class ResultTypeAnalyzer(Analyzer):
     def _(self, inst: vm.LoadObject):
         self._stack.push_object(inst.object)
 
+    @_apply.register
+    def _(self, inst: vm.NoOperation):
+        ...
+
 

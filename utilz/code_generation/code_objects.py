@@ -1,18 +1,16 @@
 from dataclasses import dataclass
 from typing import Any
 
-from miniz.core import ObjectProtocol
+from miniz.interfaces.oop import IOOPMemberDefinition, IOOPMemberReference
+from miniz.vm.instruction import Instruction
 from miniz.vm.instructions import ICallInstruction
 from utilz.code_generation.core import CodeGenerationResult
 
 
 @dataclass(slots=True)
 class BoundMemberCode(CodeGenerationResult):
-    member: ObjectProtocol
-
-    @property
-    def instance(self):
-        return self.code
+    instance: list[Instruction]
+    member: IOOPMemberDefinition | IOOPMemberReference
 
 
 class CallSiteCode(CodeGenerationResult):
@@ -31,3 +29,9 @@ class CallSiteCode(CodeGenerationResult):
     @callee.setter
     def callee(self, value):
         self.call_instruction.callee = value
+
+
+@dataclass(slots=True)
+class LoopingCode(CodeGenerationResult):
+    continue_target: Instruction
+    break_target: Instruction

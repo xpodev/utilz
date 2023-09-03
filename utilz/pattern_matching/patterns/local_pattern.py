@@ -15,7 +15,7 @@ class LocalPattern(IPattern):
     def local(self):
         return self._local
 
-    def match(self, source: TypeProtocol) -> BasicMatchResult | None:
+    def match(self, source: TypeProtocol, **_) -> BasicMatchResult | None:
         if not assignable_to(source, self.local.type):
             return None
         return BasicMatchResult(self, source, [vm.SetLocal(self.local)])

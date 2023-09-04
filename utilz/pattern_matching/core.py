@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from miniz.core import TypeProtocol
 from miniz.vm.instruction import Instruction
+from utilz.code_generation.core import CodeGenerationResult
 
 
 class IMatchResult:
@@ -10,13 +10,13 @@ class IMatchResult:
     the source object into the target when executed.
     """
 
-    source: TypeProtocol
+    source: CodeGenerationResult
     target: "IPattern"
     code: list[Instruction]
 
 
 class BasicMatchResult(IMatchResult):
-    def __init__(self, target: "IPattern", source: TypeProtocol, code: list[Instruction]):
+    def __init__(self, target: "IPattern", source: CodeGenerationResult, code: list[Instruction]):
         self.source = source
         self.target = target
         self.code = code
@@ -33,7 +33,7 @@ class PatternOptions:
 class IPattern:
     options = PatternOptions()
 
-    def match(self, source: TypeProtocol, **kwargs) -> IMatchResult | None:
+    def match(self, source: CodeGenerationResult, **kwargs) -> IMatchResult | None:
         """
         Try to match the source type into this (self) pattern and return the result object.
         This function generates code with the assumption that the matched object is on the

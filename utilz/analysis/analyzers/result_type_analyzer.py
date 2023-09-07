@@ -53,6 +53,8 @@ class ResultTypeAnalyzer(Analyzer):
 
     @_apply.register
     def _(self, inst: vm.LoadField):
+        if inst.field.is_instance_bound:
+            self._stack.pop_type(inst.field.owner)
         self._stack.push_field(inst.field)
 
     @_apply.register
@@ -66,5 +68,23 @@ class ResultTypeAnalyzer(Analyzer):
     @_apply.register
     def _(self, inst: vm.NoOperation):
         ...
+
+    @_apply.register
+    def _(self, _: vm.Pop):
+        self._stack.pop()
+
+    @_apply.register
+    def _(self, inst: vm.SetArgument):
+        self._stack.pop_argument(inst.parameter)
+
+    @_apply.register
+    def _(self, inst: vm.SetField):
+        self._stack.pop_field(inst.field)
+        if inst.field.is_instance_bound:
+            self._stack.pop_type(inst.field.owner)
+
+    @_apply.register
+    def _(self, inst: vm.SetLocal):
+        self._stack.pop_local(inst.local)
 
 
